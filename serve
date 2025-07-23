@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+./venv/bin/python3 server.py & sudo ./venv/bin/python3 -m http.server 80
