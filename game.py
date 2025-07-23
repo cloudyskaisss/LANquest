@@ -1,8 +1,8 @@
 import random
 import datetime
 
-# Active player data
 player_data = {}
+
 
 def nearby_players(username):
     x, y = player_data[username]["pos"]
@@ -16,7 +16,7 @@ def nearby_players(username):
     return nearby
 
 
-# NPC rotating dialogues by day of week
+
 dialogues = {
 
     "store": {
@@ -145,9 +145,9 @@ dialogues = {
 
 }
 
-# Handle incoming commands
 async def handle_command(conn, username, data):
     pdata = player_data[username]
+
     if pdata.get("dialogue"):
         tree = pdata["dialogue"]
         if data in tree["options"]:
@@ -167,15 +167,16 @@ async def handle_command(conn, username, data):
             await conn.send(f"You slash the goblin for {damage} damage!")
 
             if pdata["in_combat"]["enemy_hp"] <= 0:
-                await conn.send("You defeated the goblin! +5 XP")
+                xp = random.randint(3,7)
+                await conn.send("You defeated the goblin! +", xp, " XP")
                 pdata["in_combat"] = None
-                # Give loot or XP here
+                pdata["xp"] += xp
             else:
                 retaliate = random.randint(1, 4)
                 pdata["hp"] -= retaliate
                 await conn.send(f"The goblin bites back! You lose {retaliate} HP. You have {pdata['hp']} HP left.")
 
-            return  # skip rest of command handling while in combat
+            return
         else:
             await conn.send("You're in combat! Type 'attack' to fight!")
             return
@@ -190,6 +191,8 @@ async def handle_command(conn, username, data):
         await conn.send("  who - List players\n")
         await conn.send("  say [msg] - Say something\n")
         await conn.send("  trade [name] - Start trade\n")
+        await conn.send("  attack [name] - Attack a nearby player.")
+        await conn.send("  nearby - List nearby players\n")
         await conn.send("  help - This list\n")
     elif cmd == "home":
         pdata["pos"] = pdata["house"][:]
@@ -203,20 +206,22 @@ async def handle_command(conn, username, data):
     elif cmd == "where":
         x, y = pdata["pos"]
         await conn.send(f"You are at ({x}, {y})\n")
-        if pdata["pos"] == (15, 20):
+        if x == 15 and y == 20:
             await conn.send("You are in the restaurant.\n")
-        elif pdata["pos"] == (10, 20):
+        elif x == 10 and y == 20:
             await conn.send("You are in the store.\n")
         elif pdata["pos"] == pdata["house"]:
             await conn.send("You are in your home. Cozy!\n")
+        elif x >= 30 and x <=35 and y >= 35 and y <= 40:
+            await conn.send("You are in the forest. Perhaps there is some treasure nearby?")
     elif cmd == "who":
         names = ", ".join(player_data.keys())
         await conn.send(f"Players online: {names}\n")
     elif cmd.startswith("say "):
         msg = data[4:].strip()
         for other, odata in player_data.items():
-            if other != username and odata["pos"] == pdata["pos"]:
-                odata["conn"].send(f"{username} says: {msg}\n")
+            if other != username:
+                await odata["conn"].send(f"{username} says: {msg}\n")
         await conn.send("You said it.\n")
     elif cmd == "talk":
         x, y = pdata["pos"]
@@ -293,7 +298,6 @@ async def handle_command(conn, username, data):
             await conn.send("You can't attack yourself, weirdo.")
         else:
             tdata = player_data[target]
-            # Check if close enough
             if abs(pdata["pos"][0] - tdata["pos"][0]) > 5 or abs(pdata["pos"][1] - tdata["pos"][1]) > 5:
                 await conn.send("They're too far away to hit.")
             else:
@@ -301,5 +305,33 @@ async def handle_command(conn, username, data):
                 tdata["hp"] -= damage
                 await conn.send(f"You attack {target} for {damage} damage!")
                 await tdata["conn"].send(f"{username} attacked you for {damage} damage! You have {tdata['hp']} HP left.")
+    elif cmd.startswith("climb"):
+        pdata.setdefault("climbcount", 0)
+
+        # Check for golden egg first
+        if pdata["pos"] == pdata["eggpos"] and pdata["goldeggexist"]:
+            await conn.send("You climb the tree, and up there lays a golden egg!")
+            return  # stop here
+
+        # Forest climb
+        elif 30 <= pdata["pos"][0] <= 35 and 35 <= pdata["pos"][1] <= 40:
+            pdata["climbcount"] += 1
+            if pdata["climbcount"] >= 10:
+                await conn.send(f"Maybe you should check {pdata['eggpos']}?\n")
+                pdata["climbcount"] = 0
+            else:
+                await conn.send("You climb the tree. Not much to see, but you feel special up here.\n")
+
+        else:
+            await conn.send("There's nothing here to climb.\n")
+
+    elif cmd.startswith("take") or cmd.startswith("grab"):
+        if tuple(pdata["pos"]) == tuple(pdata.get("eggpos", ())) and pdata.get("goldeggexist"):
+            await conn.send("You take the golden egg! +10 gold.")
+            pdata.setdefault("inventory", []).append("golden egg")
+            pdata["goldeggexist"] = False
+        else:
+            await conn.send("There's nothing here to take.\n")
+
     else:
         await conn.send("Unknown command. Type 'help' for options.\n")
