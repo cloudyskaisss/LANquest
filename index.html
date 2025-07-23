@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>LANQuest</title></head>
+<body>
+  <pre id="log"></pre>
+  <input id="input" autocomplete="off" placeholder="Type a command..." />
+  <script>
+    const ws = new WebSocket("ws://" + location.hostname + ":8765");
+    ws.binaryType = "text";
+    const log = document.getElementById("log");
+    const input = document.getElementById("input");
+
+    ws.onmessage = (e) => {
+      log.textContent += e.data + "\n";
+      log.scrollTop = log.scrollHeight;
+    };
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        ws.send(input.value);
+        input.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
