@@ -23,4 +23,4 @@ Copy and paste the following commands:
 
   Type in the following URL: https://[HOST MACHINE IP]:8080
     
-  Replace [HOST_MACHINE_IP] with the local IP address of the host machine. To find this out, type in ifconfig, and look for an address like 192.168.1.1 or 10.0.0.1.
+  Replace [HOST_MACHINE_IP] with the local IP address of the host machine. To find this out, type in ifconfig (linux) or ipconfig (windows), and look for an address like 192.168.1.1 or 10.0.0.1.
