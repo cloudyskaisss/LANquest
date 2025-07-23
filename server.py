@@ -1,9 +1,29 @@
 import asyncio
 import websockets
-from game import handle_command, player_data
 import random
+import os
+import json
+from game import handle_command, player_data
 
 used_house_positions = set()
+PLAYER_FILE = "players.json"
+
+# Load saved players
+if os.path.exists(PLAYER_FILE):
+    with open(PLAYER_FILE, "r") as f:
+        saved_players = json.load(f)
+else:
+    saved_players = {}
+
+def save_players():
+    clean = {}
+    for user, pdata in saved_players.items():
+        clean[user] = {
+            key: val for key, val in pdata.items()
+            if key != "conn"
+        }
+    with open(PLAYER_FILE, "w") as f:
+        json.dump(clean, f, indent=2)
 
 def get_unique_house_pos():
     while True:
@@ -20,15 +40,40 @@ async def handle_connection(websocket):
         await websocket.send("Username taken or invalid. Try another:")
         username = await websocket.recv()
 
-    player_data[username] = {
-        "conn": websocket,
-        "pos": [random.randint(0, 49), random.randint(0, 49)],
-        "house": get_unique_house_pos(),
-        "inventory": [],
-        "hp": 100,
-        "dialogue": None,
-        "username": username,
-    }
+    await websocket.send("Do you want to login or register? (login/register):")
+    action = await websocket.recv()
+    action = action.lower().strip()
+
+    while action not in ("login", "register"):
+        await websocket.send("Invalid option. Type 'login' or 'register':")
+        action = await websocket.recv()
+        action = action.lower().strip()
+
+    if action == "register":
+        if username in saved_players:
+            await websocket.send("Username already exists.")
+            return
+        pdata = {
+            "pos": [random.randint(0, 49), random.randint(0, 49)],
+            "house": get_unique_house_pos(),
+            "inventory": [],
+            "hp": 100,
+            "dialogue": None,
+            "username": username,
+            "goldeggexist": True,
+            "eggpos": [random.randint(29, 34), random.randint(34, 39)],
+            "climbcount": 0
+        }
+        saved_players[username] = pdata
+        save_players()
+    elif action == "login":
+        if username not in saved_players:
+            await websocket.send("No such user.")
+            return
+        pdata = saved_players[username]
+
+    pdata["conn"] = websocket
+    player_data[username] = pdata
 
     await websocket.send(f"Welcome, {username}! Type 'help' for commands.")
 
@@ -38,7 +83,9 @@ async def handle_connection(websocket):
     except websockets.exceptions.ConnectionClosed:
         pass
     finally:
+        saved_players[username] = player_data[username]
         del player_data[username]
+        save_players()
         print(f"{username} disconnected.")
 
 async def main():
