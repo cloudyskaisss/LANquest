@@ -53,6 +53,18 @@ async def handle_connection(websocket):
         if username in saved_players:
             await websocket.send("Username already exists.")
             return
+
+        await websocket.send("Choose a password:")
+        password = await websocket.recv()
+
+        await websocket.send("What is your character's preferred gender in a relationship?(m/f) (trust me, this matters.)")
+        preferred_gender = await websocket.recv()
+        preferred_gender = preferred_gender.lower().strip()
+        if preferred_gender not in ["m", "f"]:
+            await websocket.send("Please enter in 'm' or 'f'.")
+            preferred_gender = await websocket.recv()
+            preferred_gender = preferred_gender.lower().strip()
+
         pdata = {
             "pos": [random.randint(0, 49), random.randint(0, 49)],
             "house": get_unique_house_pos(),
@@ -60,10 +72,13 @@ async def handle_connection(websocket):
             "hp": 100,
             "dialogue": None,
             "username": username,
+            "password": password,
             "goldeggexist": True,
             "eggpos": [random.randint(29, 34), random.randint(34, 39)],
             "climbcount": 0,
             "trade": None,
+            "preferred_gender": preferred_gender,
+            "xp": 0
         }
         saved_players[username] = pdata
         save_players()
