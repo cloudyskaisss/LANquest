@@ -160,6 +160,7 @@ async def handle_command(conn, username, data):
         return
 
     cmd = data.lower().strip()
+    await conn.send(f">{data.strip()}")
     if "in_combat" in pdata and pdata["in_combat"]:
         if cmd == "attack":
             damage = random.randint(3, 6)
