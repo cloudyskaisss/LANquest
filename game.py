@@ -152,11 +152,11 @@ async def handle_command(conn, username, data):
         tree = pdata["dialogue"]
         if data in tree["options"]:
             response = tree["options"][data]["response"]
-            await conn.send((response + "\n"))
+            await conn.send((response + ""))
             print(f"[{username}] dialogue response: {response}")
             pdata["dialogue"] = None
         else:
-            await conn.send("Invalid choice. Choose a number from the list.\n")
+            await conn.send("Invalid choice. Choose a number from the list.")
         return
 
     cmd = data.lower().strip()
@@ -182,54 +182,54 @@ async def handle_command(conn, username, data):
             return
 
     if cmd == "help":
-        await conn.send("Available commands:\n")
-        await conn.send("  move north/south/east/west - Move around\n")
-        await conn.send("  home - Go to your house\n")
-        await conn.send("  talk - Talk to nearby NPCs\n")
-        await conn.send("  inventory - View items\n")
-        await conn.send("  where - Show location\n")
-        await conn.send("  who - List players\n")
-        await conn.send("  say [msg] - Say something\n")
-        await conn.send("  trade [name] - Start trade\n")
+        await conn.send("Available commands:")
+        await conn.send("  move north/south/east/west - Move around")
+        await conn.send("  home - Go to your house")
+        await conn.send("  talk - Talk to nearby NPCs")
+        await conn.send("  inventory - View items")
+        await conn.send("  where - Show location")
+        await conn.send("  who - List players")
+        await conn.send("  say [msg] - Say something")
+        await conn.send("  trade [name] - Start trade")
         await conn.send("  attack [name] - Attack a nearby player.")
-        await conn.send("  nearby - List nearby players\n")
-        await conn.send("  help - This list\n")
+        await conn.send("  nearby - List nearby players")
+        await conn.send("  help - This list")
     elif cmd == "home":
         pdata["pos"] = pdata["house"][:]
-        await conn.send("You return home.\n")
+        await conn.send("You return home.")
     elif cmd == "inventory":
         inv = pdata.get("inventory", [])
         if inv:
-            await conn.send(f"You have: {', '.join(inv)}\n")
+            await conn.send(f"You have: {', '.join(inv)}")
         else:
-            await conn.send("Your inventory is empty.\n")
+            await conn.send("Your inventory is empty.")
     elif cmd == "where":
         x, y = pdata["pos"]
-        await conn.send(f"You are at ({x}, {y})\n")
+        await conn.send(f"You are at ({x}, {y})")
         if x == 15 and y == 20:
-            await conn.send("You are in the restaurant.\n")
+            await conn.send("You are in the restaurant.")
         elif x == 10 and y == 20:
-            await conn.send("You are in the store.\n")
+            await conn.send("You are in the store.")
         elif pdata["pos"] == pdata["house"]:
-            await conn.send("You are in your home. Cozy!\n")
+            await conn.send("You are in your home. Cozy!")
         elif x >= 30 and x <=35 and y >= 35 and y <= 40:
             await conn.send("You are in the forest. Perhaps there is some treasure nearby?")
     elif cmd == "who":
         names = ", ".join(player_data.keys())
-        await conn.send(f"Players online: {names}\n")
+        await conn.send(f"Players online: {names}")
     elif cmd.startswith("say "):
         msg = data[4:].strip()
         for other, odata in player_data.items():
             if other != username:
-                await odata["conn"].send(f"{username} says: {msg}\n")
-        await conn.send("You said it.\n")
+                await odata["conn"].send(f"{username} says: {msg}")
+        await conn.send("You said it.")
     elif cmd == "talk":
         x, y = pdata["pos"]
         day = str(datetime.datetime.now().weekday())
         npc = None
 
         if y == pdata["house"][1]:
-            await conn.send("You're at your house. No one is home.\n")
+            await conn.send("You're at your house. No one is home.")
             return
         elif x == 10 and y == 20:
             npc = "store"
@@ -238,11 +238,11 @@ async def handle_command(conn, username, data):
 
         if npc:
             dialogue = dialogues[npc][day]
-            options_text = "\n".join([f"{k}. {v['text']}" for k, v in dialogue["options"].items()])
-            await conn.send(f"NPC: {dialogue['prompt']}\n{options_text}\n")
+            options_text = "".join([f"{k}. {v['text']}" for k, v in dialogue["options"].items()])
+            await conn.send(f"NPC: {dialogue['prompt']}{options_text}")
             pdata["dialogue"] = dialogue
         else:
-            await conn.send("No one to talk to here.\n")
+            await conn.send("No one to talk to here.")
     elif cmd.startswith("move ") and not cmd[-1].isdigit():
         direction = cmd.split(" ")[1]
         dx, dy = 0, 0
@@ -252,7 +252,7 @@ async def handle_command(conn, username, data):
         elif direction == "west": dx = -1
         pdata["pos"][0] += dx
         pdata["pos"][1] += dy
-        await conn.send(f"You move {direction}.\n")
+        await conn.send(f"You move {direction}.")
         if pdata["pos"][0] >=40 and pdata["pos"][0] <=44 and pdata["pos"][1] >= 32 and pdata["pos"][1] <= 35:
             await conn.send("You are in the cave now. A green, rotten goblin attacks!")
             pdata["hp"] = pdata["hp"] - random.randint(1, 5)
@@ -273,7 +273,7 @@ async def handle_command(conn, username, data):
         elif direction == "west": dx = -1
         pdata["pos"][0] += (dx * mult)
         pdata["pos"][1] += (dy * mult)
-        await conn.send(f"You move {direction} {mult} times.\n")
+        await conn.send(f"You move {direction} {mult} times.")
         if pdata["pos"][0] >=40 and pdata["pos"][0] <=44 and pdata["pos"][1] >= 32 and pdata["pos"][1] <= 35:
             await conn.send("You are in the cave now. A green, rotten goblin attacks!")
             pdata["hp"] = pdata["hp"] - random.randint(1, 5)
@@ -287,7 +287,7 @@ async def handle_command(conn, username, data):
     elif cmd == "nearby":
         np = nearby_players(pdata["username"])
         if np:
-            await conn.send(f"{np}\n")
+            await conn.send(f"{np}")
         else:
             await conn.send("There's nobody nearby.")
     elif cmd.startswith("attack "):
@@ -317,13 +317,13 @@ async def handle_command(conn, username, data):
         elif 30 <= pdata["pos"][0] <= 35 and 35 <= pdata["pos"][1] <= 40:
             pdata["climbcount"] += 1
             if pdata["climbcount"] >= 10:
-                await conn.send(f"Maybe you should check {pdata['eggpos']}?\n")
+                await conn.send(f"Maybe you should check {pdata['eggpos']}?")
                 pdata["climbcount"] = 0
             else:
-                await conn.send("You climb the tree. Not much to see, but you feel special up here.\n")
+                await conn.send("You climb the tree. Not much to see, but you feel special up here.")
 
         else:
-            await conn.send("There's nothing here to climb.\n")
+            await conn.send("There's nothing here to climb.")
 
     elif cmd.startswith("take") or cmd.startswith("grab"):
         if tuple(pdata["pos"]) == tuple(pdata.get("eggpos", ())) and pdata.get("goldeggexist"):
@@ -331,7 +331,93 @@ async def handle_command(conn, username, data):
             pdata.setdefault("inventory", []).append("golden egg")
             pdata["goldeggexist"] = False
         else:
-            await conn.send("There's nothing here to take.\n")
+            await conn.send("There's nothing here to take.")
+    elif cmd.startswith("trade "):
+        target = cmd.split(" ", 1)[1]
+        if target not in player_data:
+            await conn.send("No such player.")
+        elif target == username:
+            await conn.send("You can't trade with yourself.")
+        elif abs(pdata["pos"][0] - player_data[target]["pos"][0]) > 5 or abs(pdata["pos"][1] - player_data[target]["pos"][1]) > 5:
+            await conn.send("They're too far away to trade.")
+        elif player_data[target].get("trade"):
+            await conn.send("They're already in a trade!")
+        else:
+            pdata["trade"] = {"with": target, "stage": "pending"}
+            player_data[target]["trade"] = {"with": username, "stage": "incoming"}
+            player_data[target]["trade_request"] = username  # 🛠️ Add this line
+            await conn.send(f"You offered to trade with {target}.")
+            await player_data[target]["conn"].send(f"{username} wants to trade with you. Type 'accept' or 'decline'.")
+
+    elif cmd == "accept":
+        if pdata.get("trade") and pdata["trade"]["stage"] == "incoming":
+            other = pdata["trade"]["with"]
+            if other not in player_data:
+                await conn.send("They're gone.")
+                pdata["trade"] = None
+                return
+
+            pdata["trade"]["stage"] = "offer"
+            player_data[other]["trade"]["stage"] = "offer"
+            await conn.send(f"You accepted the trade with {other}.")
+            await player_data[other]["conn"].send(f"{username} accepted your trade. You can now type 'offer [item]'.")
+        else:
+            await conn.send("No trade to accept.")
+
+    elif cmd == "decline":
+        if pdata.get("trade") and pdata["trade"]["stage"] == "pending":
+            other = pdata["trade"]["with"]
+            if other in player_data:
+                await player_data[other]["conn"].send(f"{username} declined your trade.")
+                player_data[other]["trade"] = None
+            pdata["trade"] = None
+            await conn.send("You declined the trade.")
+        else:
+            await conn.send("No trade to decline.")
+    elif cmd.startswith("offer "):
+        if pdata.get("trade") and pdata["trade"]["stage"] == "offer":
+            item = cmd.split(" ", 1)[1]
+            if item in pdata.get("inventory", []):
+                other = pdata["trade"]["with"]
+
+                pdata["trade"]["item"] = item
+                pdata["trade"]["confirmed"] = False
+                player_data[other]["trade"]["confirmed"] = False  # Reset theirs too
+
+                await player_data[other]["conn"].send(f"{username} offers you a {item}.Type 'offer [item]' to respond.")
+                await conn.send(f"You offered a {item}.")
+            else:
+                await conn.send("You don't have that item.")
+        else:
+            await conn.send("You're not in a trade.")
+    elif cmd == "confirm":
+        if pdata.get("trade") and pdata["trade"]["stage"] == "offer" and "item" in pdata["trade"]:
+            pdata["trade"]["confirmed"] = True
+            other = pdata["trade"]["with"]
+
+            await conn.send("You confirmed your trade offer.")
+
+            if (player_data[other].get("trade") and
+                player_data[other]["trade"].get("confirmed")):
+                # Swap items
+                your_item = pdata["trade"]["item"]
+                their_item = player_data[other]["trade"]["item"]
+
+                pdata["inventory"].remove(your_item)
+                pdata["inventory"].append(their_item)
+
+                player_data[other]["inventory"].remove(their_item)
+                player_data[other]["inventory"].append(your_item)
+
+                await conn.send(f"Trade completed! You got a {their_item}.")
+                await player_data[other]["conn"].send(f"Trade completed! You got a {your_item}.")
+
+                pdata["trade"] = None
+                player_data[other]["trade"] = None
+            else:
+                await conn.send("Waiting on the other player to confirm.")
+        else:
+            await conn.send("No active trade to confirm.")
 
     else:
-        await conn.send("Unknown command. Type 'help' for options.\n")
+        await conn.send("Unknown command. Type 'help' for options.")
