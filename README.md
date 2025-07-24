@@ -13,6 +13,8 @@ A python-based, LAN-based multiplayer, text-based MUD. Made to be hosted from a 
 
     pip install websockets
 
+    pip install cryptography
+
 
 **Windows:**
   To install prerequisites:
@@ -20,6 +22,8 @@ A python-based, LAN-based multiplayer, text-based MUD. Made to be hosted from a 
     Install Python3 from Microsoft store by typing "python" without it installed.
 
     pip install websockets
+
+    pip install cryptography
 
 
 **All Machines:**
