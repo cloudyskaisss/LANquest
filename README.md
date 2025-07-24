@@ -17,7 +17,7 @@ A python-based, LAN-based multiplayer, text-based MUD. Made to be hosted from a 
 **Windows:**
   To install prerequisites:
 
-    winget install -e --id Python.Python.3.11 --scope machine
+    Install Python3 from Microsoft store by typing "python" without it installed.
 
     pip install websockets
 
