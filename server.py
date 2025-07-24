@@ -4,27 +4,19 @@ import random
 import os
 import json
 from game import handle_command, player_data
+from crypto_players import load_players_encrypted, save_players_encrypted
 
-used_house_positions = set()
-PLAYER_FILE = "players.json"
-
-# Load saved players
-if os.path.exists(PLAYER_FILE):
-    with open(PLAYER_FILE, "r") as f:
-        saved_players = json.load(f)
-else:
-    saved_players = {}
+saved_players = load_players_encrypted()
 
 def save_players():
-    clean = {}
-    for user, pdata in saved_players.items():
-        clean[user] = {
-            key: val for key, val in pdata.items()
-            if key != "conn"
-        }
-    with open(PLAYER_FILE, "w") as f:
-        json.dump(clean, f, indent=2)
+    # strip non-serializable stuff like connections BEFORE calling this
+    clean = {
+        user: {k: v for k, v in pdata.items() if k != "conn"}
+        for user, pdata in saved_players.items()
+    }
+    save_players_encrypted(clean)
 
+used_house_positions = set()
 def get_unique_house_pos():
     while True:
         pos = (random.randint(0, 49), 25)
@@ -78,13 +70,19 @@ async def handle_connection(websocket):
             "climbcount": 0,
             "trade": None,
             "preferred_gender": preferred_gender,
-            "xp": 0
+            "xp": 0,
+            "gp": 0
         }
         saved_players[username] = pdata
         save_players()
     elif action == "login":
         if username not in saved_players:
             await websocket.send("No such user.")
+            return
+        await websocket.send("Enter your password:")
+        password = await websocket.recv()
+        if password != saved_players[username]["password"]:
+            await websocket.send("Password incorrect.")
             return
         pdata = saved_players[username]
 
