@@ -1,41 +1,61 @@
 # LANquest
 [Work in Progess]
 
-A python-based, LAN-based multiplayer, text-based MUD. Made to be hosted from a Raspberry Pi or similar single-board computer, but it can be hosted from any computer, on any OS with Python installed.
+A python-based, LAN-based multiplayer, text-based MUD. Made to be hosted from a Raspberry Pi or similar single-board computer, but it can be hosted from any computer, on any OS with wifi and with Python installed.
 
 # Install & usage instructions:
 
 **Linux:**
+
+  To install prerequisites:
   
+    sudo apt install python3 --scope machine
+
+    pip install websockets
+
+
+**Windows:**
+  To install prerequisites:
+
+    winget install -e --id Python.Python.3.11 --scope machine
+
+    pip install websockets
+
+
+**All Machines:**
+
   Copy and paste the following commands:
   
     git clone https://github.com/cloudyskaisss/LANquest.git
     
     cd LANquest
+
+    python3 server.py
+
+  _In another terminal:_
+
+    python3 -m http.server 80
+
+
+  If _pip install websockets_ gives an error saying you need to use a venv, use the following commands instead:
     
-    ./install
-  
-    ./serve
+    git clone https://github.com/cloudyskaisss/LANquest.git
+    
+    cd LANquest
+
+    python3 -m venv venv
+
+    ./venv/bin/pip install websockets
+
+    ./venv/bin/python3 server.py
+
+  _In another terminal:_
+
+    ./venv/bin/python3 -m http.server 80
 
 
-**Windows:**
-  **Make sure git and python are installed.**
-  
-  Copy and paste the following commands:
 
-    Terminal 1:
-      pip install websockets
-      
-      git clone https://github.com/cloudyskaisss/LANquest.git
-      
-      cd LANquest
 
-      python3 server.py
-      
-      
-    Terminal 2:
-      
-      python3 -m http.server 80
 
 
 **To use the webpage:**
