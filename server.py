@@ -62,7 +62,8 @@ async def handle_connection(websocket):
             "username": username,
             "goldeggexist": True,
             "eggpos": [random.randint(29, 34), random.randint(34, 39)],
-            "climbcount": 0
+            "climbcount": 0,
+            "trade": None,
         }
         saved_players[username] = pdata
         save_players()
