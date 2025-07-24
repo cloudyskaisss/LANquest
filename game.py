@@ -48,7 +48,7 @@ async def advance_dialogue(conn, pdata, choice):
     node = tree[dlg["node"]]
 
     if choice not in node["options"]:
-        await conn.send("Invalid choice. Pick a number from the list.\n")
+        await conn.send("Invalid choice. Pick a number from the list.")
         return
 
     opt = node["options"][choice]
@@ -61,7 +61,7 @@ async def advance_dialogue(conn, pdata, choice):
 
     if opt.get("end"):
         pdata["dialogue"] = None
-        await conn.send("You leave the conversation.\n")
+        await conn.send("You leave the conversation.")
         return
 
     next_node = opt["next"]
@@ -75,7 +75,7 @@ async def advance_dialogue(conn, pdata, choice):
 async def ev_buy_sword(conn, pdata):
     if pdata["gp"] >= .5:
         pdata["inventory"].append("sword")
-        await conn.send("You received a sword!\n")
+        await conn.send("You received a sword!")
         pdata["gp"] -= .5
     else:
         await conn.send("Unfortunately, you do not have the money for that.")
@@ -83,18 +83,18 @@ async def ev_buy_sword(conn, pdata):
 async def ev_buy_shield(conn, pdata):
     if pdata["gp"] >= .3:
         pdata["inventory"].append("shield")
-        await conn.send("You got a shield!!\n")
+        await conn.send("You got a shield!!")
         pdata["gp"] -= .3
     else:
         await conn.send("Unfortunately, you do not have the money for that.")
 
 async def ev_give_bread(conn, pdata):
     pdata["inventory"].append("bread")
-    await conn.send("You take some bread. (+10 hp)\n")
+    await conn.send("You take some bread. (+10 hp)")
 
 async def ev_give_ale(conn, pdata):
     pdata["inventory"].append("ale")
-    await conn.send("You got a cup of ale. (+5 hp)\n")
+    await conn.send("You got a cup of ale. (+5 hp)")
 
 async def ev_sell_egg(conn, pdata):
     if "golden egg" in pdata["inventory"]:
@@ -267,7 +267,7 @@ async def handle_command(conn, username, data):
         if cmd.isdigit():
             await advance_dialogue(conn, pdata, cmd)
         else:
-            await conn.send("You're in a convo. Choose a number.\n")
+            await conn.send("You're in a convo. Choose a number.")
         return
     await conn.send(f">{data.strip()}")
     if "in_combat" in pdata and pdata["in_combat"]:
