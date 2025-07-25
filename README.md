@@ -34,6 +34,8 @@ A python-based, LAN-based multiplayer, text-based MUD. Made to be hosted from a 
     
     cd LANquest
 
+  **IN SERVER.PY, CHANGE [YOUR IP ADDRESS CHANGE THIS] TO YOUR HOST MACHINE'S IP ADDRESS**
+
     python3 server.py
 
   _In another terminal:_
