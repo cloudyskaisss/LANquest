@@ -103,8 +103,8 @@ async def handle_connection(websocket):
         print(f"{username} disconnected.")
 
 async def main():
-    async with websockets.serve(handle_connection, "0.0.0.0", 8765):
-        print("Server running on ws://0.0.0.0:8765")
+    async with websockets.serve(handle_connection, "64.29.17.195", 8765):
+        print("Server running on ws://64.29.17.195:8765")
         await asyncio.Future()  # run forever
 
 asyncio.run(main())
