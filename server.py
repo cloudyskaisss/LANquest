@@ -1,21 +1,29 @@
+# imports
 import asyncio
 import websockets
 import random
 import os
 import json
 from game import handle_command, player_data
-from crypto_players import load_players_encrypted, save_players_encrypted
+from encrypt_players import load_players_encrypted, save_players_encrypted
 
+# save and load players
+
+# load players (save and load players)
 saved_players = load_players_encrypted()
 
+# shop inv
+
+# save players (save and load players)
 def save_players():
-    # strip non-serializable stuff like connections BEFORE calling this
+    #  strip non-serializable stuff like connections BEFORE calling this
     clean = {
         user: {k: v for k, v in pdata.items() if k != "conn"}
         for user, pdata in saved_players.items()
     }
     save_players_encrypted(clean)
 
+# unique house positions along y=25
 used_house_positions = set()
 def get_unique_house_pos():
     while True:
@@ -24,6 +32,7 @@ def get_unique_house_pos():
             used_house_positions.add(pos)
             return list(pos)
 
+# connection handler
 async def handle_connection(websocket):
     await websocket.send("Welcome to LANQuest! Enter your username:")
     username = await websocket.recv()
@@ -71,7 +80,9 @@ async def handle_connection(websocket):
             "trade": None,
             "preferred_gender": preferred_gender,
             "xp": 0,
-            "gp": 0
+            "gp": 0,
+            "level": 1,
+            "last_work_time": 0,
         }
         saved_players[username] = pdata
         save_players()
@@ -102,9 +113,11 @@ async def handle_connection(websocket):
         save_players()
         print(f"{username} disconnected.")
 
+# main (server startup)
 async def main():
     async with websockets.serve(handle_connection, "0.0.0.0", 8765):
         print("Server running on ws://0.0.0.0:8765")
-        await asyncio.Future()  # run forever
+        await asyncio.Future()  #  run forever
 
+# run main
 asyncio.run(main())
