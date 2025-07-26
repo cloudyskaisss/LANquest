@@ -4,7 +4,7 @@ import datetime
 import time
 player_data = {}
 
-
+LOGFILE = "log.txt"
 
 def drunkify(text: str) -> str:
     words = text.split()
@@ -20,7 +20,13 @@ async def dsend(conn, pdata, text: str):
     if "drunk" in pdata.get("effects", []):
         text = drunkify(text)
     await conn.send(text)
-
+    #-------------------DELETE OR COMMENT THESE LINES TO DISABLE LOGGING-------------------
+    output_print = f'output from {pdata["username"]}: "{text}"'
+    print(output_print)
+    with open(LOGFILE, "a", encoding="utf-8") as l:
+        l.write(output_print + "\n")
+    #-------------------DELETE OR COMMENT THESE LINES TO DISABLE LOGGING-------------------
+    
 
 def tick_effects(pdata):
     # make sure these exist
@@ -728,6 +734,7 @@ async def handle_command(conn, username, data):
 
     cmd = data.lower().strip()
     cmd_raw = data.strip()
+
     # dialogue check (make sure player isn't in dialogue)(KEEP HERE)
     if pdata.get("dialogue"):
         if cmd.isdigit():
