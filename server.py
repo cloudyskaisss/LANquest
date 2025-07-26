@@ -83,6 +83,8 @@ async def handle_connection(websocket):
             "gp": 0,
             "level": 1,
             "last_work_time": 0,
+            "effects": [],
+            "effect_turn": 0
         }
         saved_players[username] = pdata
         save_players()
