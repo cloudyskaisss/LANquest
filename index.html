@@ -1,9 +1,105 @@
 <!DOCTYPE html>
 <html>
-<head><title>LANQuest</title></head>
+<head>
+  <title>LANQuest</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      background: #222;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -50px;
+    }
+
+    .svg-container {
+      position: relative;
+      width: 90vw;   /* scales to 90% of viewport width */
+      max-width: 1200px;
+      aspect-ratio: 3/2; /* maintain shape (1200x800 ratio) */
+    }
+
+    .svg-container svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Position screen-area using percentages instead of fixed px */
+    .screen-area {
+      position: absolute;
+      left: 18.33%; /* 220 / 1200 * 100 */
+      top: 15%;     /* 120 / 800 * 100 */
+      width: 63.33%; /* 760 / 1200 * 100 */
+      height: 55%;  /* 440 / 800 * 100 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2%;
+      justify-content: flex-end;
+      pointer-events: none;
+    }
+
+    #log {
+      background: #111;
+      color: #33ff33;
+      font-family: 'Fira Mono', 'Consolas', 'Courier New', monospace;
+      border: 0.3vw solid #33ff33;
+      padding: 2%;
+      width: 100%;
+      height: 75%;
+      overflow-y: auto;
+      font-size: clamp(12px, 2vw, 16pt); /* responsive font size */
+      box-shadow: 0 0 2vw #33ff3344;
+      pointer-events: auto;
+      border-radius: 2vw;
+    }
+
+    #input {
+      background: #111;
+      color: #33ff33;
+      border: 0.3vw solid #33ff33;
+      padding: 2%;
+      width: 90%;
+      font-size: clamp(12px, 2vw, 1.5em);
+      outline: none;
+      pointer-events: auto;
+      border-radius: 1vw;
+      margin-bottom: 30px;
+    }
+
+    #input:focus {
+      border-color: #fff;
+    }
+
+    @media (max-width: 1000px) {
+      .svg-container {
+        transform: scale(1.5);   /* 40% bigger */
+        transform-origin: center;
+      }
+    }
+
+
+  </style>
+</head>
 <body>
-  <pre id="log"></pre>
-  <input id="input" autocomplete="off" placeholder="Type a command..." />
+  <div class="svg-container">
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+      <rect x="180" y="80" width="840" height="520" rx="48" fill="#444" stroke="#222" stroke-width="16"/>
+      <rect x="220" y="120" width="760" height="440" rx="24" fill="#222" stroke="#33ff33" stroke-width="4"/>
+      <rect x="520" y="620" width="160" height="40" rx="16" fill="#333" />
+      <ellipse cx="600" cy="680" rx="120" ry="36" fill="#222" />
+      <rect x="340" y="700" width="520" height="60" rx="16" fill="#333" stroke="#222" stroke-width="8"/>
+    </svg>
+
+    <div class="screen-area">
+      <pre id="log"></pre>
+      <input id="input" autocomplete="off" placeholder="Type a command..." />
+    </div>
+  </div>
+
   <script>
     const ws = new WebSocket("ws://" + "[YOUR IP ADDRESS CHANGE THIS]" + ":8765");
     ws.binaryType = "text";
