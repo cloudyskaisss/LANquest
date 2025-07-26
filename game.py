@@ -42,11 +42,6 @@ def tick_effects(pdata):
     return None
 
 
-
-
-
-
-
 # nearby
 def nearby_players(username):
     x, y = player_data[username]["pos"]
@@ -708,27 +703,27 @@ async def handle_command(conn, username, data):
     
     if pdata["xp"] >= 10 and pdata["xp"] < 30:
         if pdata["level"] == 1:
-            await dsend(conn, pdata, f"Level up! You are now level {pdata['level']}.")
+            await dsend(conn, pdata, f"Level up! You are now level {pdata[level]}.")
             pdata["level"] += 1
     elif pdata["xp"] >= 30 and pdata["xp"] < 100:
         if pdata["level"] == 2:
-            await dsend(conn, pdata, f"Level up! You are now level {pdata['level']}.")
+            await dsend(conn, pdata, f"Level up! You are now level {pdata[level]}.")
             pdata["level"] += 1
     elif pdata["xp"] >= 100 and pdata["xp"] < 500:
         if pdata["level"] == 3:
-            await dsend(conn, pdata, f"Level up! You are now level {pdata['level']}.")
+            await dsend(conn, pdata, f"Level up! You are now level {pdata[level]}.")
             pdata["level"] += 1
     elif pdata["xp"] >= 500 and pdata["xp"] < 2000:
         if pdata["level"] == 4:
-            await dsend(conn, pdata, f"Level up! You are now level {pdata['level']}.")
+            await dsend(conn, pdata, f"Level up! You are now level {pdata[level]}.")
             pdata["level"] += 1
     elif pdata["xp"] >= 2000 and pdata["xp"] < 10000:
         if pdata["level"] == 5:
-            await dsend(conn, pdata, f"Level up! You are now level {pdata['level']}.")
+            await dsend(conn, pdata, f"Level up! You are now level {pdata[level]}.")
             pdata["level"] += 1
     elif pdata["xp"] >= 10000 and pdata["xp"] < 50000:
         if pdata["level"] == 6:
-            await dsend(conn, pdata, f"Level up! You are now level {pdata['level']}.")
+            await dsend(conn, pdata, f"Level up! You are now level {pdata[level]}.")
             pdata["level"] += 1
 
 
@@ -1050,8 +1045,8 @@ async def handle_command(conn, username, data):
 
     # xp (display xp)
     elif cmd == "xp" or cmd == "exp" or cmd == "level":
-        await dsend(conn, pdata, f"Your current XP is {pdata['xp']}")
-        await dsend(conn, pdata, f"Your level is {pdata['level']}")
+        await dsend(conn, pdata, f"Your current XP is {pdata["xp"]}")
+        await dsend(conn, pdata, f"Your level is {pdata["level"]}")
 
     # gp (display gp)
     elif cmd == "gp" or cmd == "gold" or cmd == "money":
@@ -1088,8 +1083,8 @@ async def handle_command(conn, username, data):
             await dsend(conn, pdata, "You're health is...weird...")
 
         # xp
-        await dsend(conn, pdata, f"Your current XP is {pdata['xp']}")
-        await dsend(conn, pdata, f"Your level is {pdata['level']}")
+        await dsend(conn, pdata, f"Your current XP is {pdata["xp"]}")
+        await dsend(conn, pdata, f"Your level is {pdata["level"]}")
 
         # gp
         gp = pdata["gp"]
@@ -1155,27 +1150,27 @@ async def handle_command(conn, username, data):
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
         await dsend(conn, pdata, "46|                                                                                                                                                                                              |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
-        await dsend(conn, pdata, "45|                                                                                                                                                                                              |")
+        await dsend(conn, pdata, "45|                                                                                                                               |-------------------|                                          |")
+        await dsend(conn, pdata, "  |                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "44|                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "  |                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "43|                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "  |                                                                                                                               |       forest      |                                          |")
+        await dsend(conn, pdata, "42|                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "  |                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "41|                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "  |                                                                                                                               |                   |                                          |")
+        await dsend(conn, pdata, "40|                                                                                                                               |-------------------|                                          |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
-        await dsend(conn, pdata, "44|                                                                                                                                                                                              |")
+        await dsend(conn, pdata, "39|                                                                                                                                                                                              |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
-        await dsend(conn, pdata, "43|                                                                                                                                                                                              |")
+        await dsend(conn, pdata, "38|                                                                                                                                                                                              |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
-        await dsend(conn, pdata, "42|                                                                                                                                                                                              |")
+        await dsend(conn, pdata, "37|                                                                                                                                                                                              |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
-        await dsend(conn, pdata, "41|                                                                                                                                                                                              |")
+        await dsend(conn, pdata, "36|                                                                                                                                                                                              |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
-        await dsend(conn, pdata, "40|                                                                                                           |-------------------|                                                              |")
-        await dsend(conn, pdata, "  |                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "39|                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "  |                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "38|                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "  |                                                                                                           |       forest      |                                                              |")
-        await dsend(conn, pdata, "37|                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "  |                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "36|                                                                                                           |                   |                                                              |")
-        await dsend(conn, pdata, "  |                                                                                                           ||                  |                                                              |")
-        await dsend(conn, pdata, "35|                                                                                                           |-------------------|                                                              |")
+        await dsend(conn, pdata, "35|                                                                                                                                                                                              |")
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
         await dsend(conn, pdata, "34|-                                                                                                                                                  |---------------|                          |")
         await dsend(conn, pdata, "  |                                                                                                                                                   |               |                          |")
@@ -1247,6 +1242,8 @@ async def handle_command(conn, username, data):
         await dsend(conn, pdata, "  |                                                                                                                                                                                              |")
         await dsend(conn, pdata, "0 |-  -  -  -  -  -  -  -  -  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -  |")
         await dsend(conn, pdata, "   1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  ")
+    
+    #drink
     elif cmd.startswith("drink"):
         if cmd.startswith("drink ") and cmd[-1] != " " and len(cmd.split(" ")) == 2:
             drink = cmd.split(" ")[1]
@@ -1273,6 +1270,8 @@ async def handle_command(conn, username, data):
                 await dsend(conn, pdata, "You need to have something, in order to drink it.")
         else:
             await dsend(conn, pdata, "Please type 'drink [item]' in order to drink something.")
+    
+    #eat
     elif cmd.startswith("eat"):
         if cmd.startswith("eat ") and cmd[-1] != " " and len(cmd.split(" ")) == 2:
             drink = cmd.split(" ")[1]
@@ -1284,5 +1283,7 @@ async def handle_command(conn, username, data):
                 await dsend(conn, pdata, "You need to have something, in order to eat it.")
         else:
             await dsend(conn, pdata, "Please type 'eat [item]' in order to drink something.")
+    
+    #everything else!
     else: 
         await dsend(conn, pdata, "Unknown command. Type 'help' for options.")
