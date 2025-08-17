@@ -8,6 +8,7 @@ from game import handle_command, player_data
 from encrypt_players import load_players_encrypted, save_players_encrypted
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8080"))
+
 # save and load players
 
 # load players (save and load players)
@@ -128,7 +129,4 @@ async def main():
     ):
         await asyncio.Future()  # run forever
 
-asyncio.run(main())
-
-# run main
 asyncio.run(main())
