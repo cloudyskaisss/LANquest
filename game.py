@@ -742,17 +742,26 @@ async def handle_command(conn, username, data):
     # combat check (carry out combat)(KEEP HERE)
     if "in_combat" in pdata and pdata["in_combat"]:
         if cmd == "attack":
-            damage = random.randint(3, 6)
+            if "sword" in pdata["inventory"]:
+                damage = random.randint(5, 9)
+            else:
+                damage = random.randint(3, 6)
             pdata["in_combat"]["enemy_hp"] -= damage
             await dsend(conn, pdata, f"You slash the goblin for {damage} damage!")
 
             if pdata["in_combat"]["enemy_hp"] <= 0:
-                xp = random.randint(3,7)
+                xp = random.randint(3,7) * pdata["level"]
                 await dsend(conn, pdata, "You defeated the goblin! +", xp, " XP")
                 pdata["in_combat"] = None
                 pdata["xp"] += xp
             else:
-                retaliate = random.randint(1, 4)
+                if "shield" in pdata["inventory"]:
+                    if random.randint(0, 1) == 1:
+                        retaliate = random.randint(1, 3)
+                    else:
+                        retaliate = 0
+                else:
+                    retaliate = random.randint(1, 4)
                 pdata["hp"] -= retaliate
                 await dsend(conn, pdata, f"The goblin bites back! You lose {retaliate} HP. You have {pdata['hp']} HP left.")
 
