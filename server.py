@@ -117,8 +117,8 @@ async def handle_connection(websocket):
 
 # main (server startup)
 async def main():
-    async with websockets.serve(handle_connection, "0.0.0.0", 8765):
-        print("Server running on ws://0.0.0.0:8765")
+    async with websockets.serve(handle_connection, "lanquest.railway.internal", 8765):
+        print("Server running on ws://lanquest.railway.internal:8765")
         await asyncio.Future()  #  run forever
 
 # run main
