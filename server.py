@@ -6,7 +6,8 @@ import os
 import json
 from game import handle_command, player_data
 from encrypt_players import load_players_encrypted, save_players_encrypted
-
+HOST = os.getenv("HOST", "0.0.0.0")
+PORT = int(os.getenv("PORT", "8080"))
 # save and load players
 
 # load players (save and load players)
@@ -115,11 +116,19 @@ async def handle_connection(websocket):
         save_players()
         print(f"{username} disconnected.")
 
-# main (server startup)
 async def main():
-    async with websockets.serve(handle_connection, "https://lanquest-production.up.railway.app", 8765):
-        print("Server running on ws://lanquest.railway.internal:8765")
-        await asyncio.Future()  #  run forever
+    # optional: keep connections alive
+    async with websockets.serve(
+        handle_connection,
+        HOST,
+        PORT,
+        ping_interval=20,
+        ping_timeout=20,
+        max_size=2**20,
+    ):
+        await asyncio.Future()  # run forever
+
+asyncio.run(main())
 
 # run main
 asyncio.run(main())
